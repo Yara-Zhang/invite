@@ -6,9 +6,10 @@
 <meta name="format-detection" content="telephone=no" data-page-node-id="HZXDAHmxzXcjxPB1aRymyy">
 <title>张晋荣 &amp; 张小雨 · 答谢宴</title>
 <meta name="description" content="八年 · 成就已解锁｜张晋荣 & 张小雨 答谢宴邀请，点开拆信 →">
-<meta property="og:title" content="张晋荣 &amp; 张小雨 · 答谢宴">
-<meta property="og:description" content="八年 · 成就已解锁｜点开拆信">
+<meta property="og:title" content="满级恋人，答谢赴宴">
+<meta property="og:description" content="良辰已定，吉日待访。备有薄酒，以谢良友。">
 <meta property="og:image" content="https://invite.yaraz.xyz/assets/share-cover.jpg">
+<meta property="og:url" content="https://invite.yaraz.xyz/">
 <style>
   @font-face{
     font-family:"HandWrite";
@@ -94,6 +95,15 @@
   }
   @keyframes sway-a{from{transform:rotate(-1deg);}to{transform:rotate(1.2deg);}}
   @keyframes sway-b{from{transform:rotate(.9deg);}to{transform:rotate(-1.1deg);}}
+  /* mobile: shrink wall flowers so they don't crowd the cover */
+  @media (max-width:520px){
+    .fl-hang{
+      width:34vw;max-width:150px;top:-8px;left:-16px;opacity:.75;
+    }
+    .fl-red{
+      width:26vw;max-width:118px;right:-20px;opacity:.7;
+    }
+  }
 
   /* ---------- cover ---------- */
   .cover{
@@ -107,7 +117,7 @@
   }
   .archimg{
     display:block;width:100%;height:auto;
-    filter:drop-shadow(0 20px 42px rgba(70,58,40,.30));
+    filter:drop-shadow(0 8px 16px rgba(70,58,40,.16));
   }
   .arch-scrim{
     position:absolute;left:0;right:0;bottom:0;height:34%;z-index:1;pointer-events:none;
@@ -1544,6 +1554,85 @@ background:url("assets/linen.jpg") center/cover;
   }else{
     document.body.classList.add('cast-on');
   }
+})();
+</script>
+<script>
+/* ---------- 点击音效：Web Audio 合成，无外部音频文件 ---------- */
+(function(){
+  var ctx = null, noiseBuf = null;
+  function audio(){
+    if(!ctx){
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if(!AC) return null;
+      ctx = new AC();
+      /* 预生成 0.6s 白噪声，供纸响/嗖声复用 */
+      noiseBuf = ctx.createBuffer(1, ctx.sampleRate * 0.6, ctx.sampleRate);
+      var d = noiseBuf.getChannelData(0);
+      for(var i = 0; i < d.length; i++){ d[i] = Math.random() * 2 - 1; }
+    }
+    if(ctx.state === 'suspended'){ ctx.resume(); }
+    return ctx;
+  }
+  function env(g, t, peak, dur){
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(peak, t + 0.008);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  }
+  /* 嗒：小按钮 */
+  function tick(){
+    var c = audio(); if(!c) return;
+    var t = c.currentTime, o = c.createOscillator(), g = c.createGain();
+    o.type = 'triangle'; o.frequency.setValueAtTime(1500, t);
+    o.frequency.exponentialRampToValueAtTime(900, t + 0.05);
+    env(g, t, 0.3, 0.06);
+    o.connect(g).connect(c.destination); o.start(t); o.stop(t + 0.08);
+  }
+  /* 啵：贴纸弹出 */
+  function pop(){
+    var c = audio(); if(!c) return;
+    var t = c.currentTime, o = c.createOscillator(), g = c.createGain();
+    o.type = 'sine'; o.frequency.setValueAtTime(380, t);
+    o.frequency.exponentialRampToValueAtTime(950, t + 0.09);
+    env(g, t, 0.55, 0.12);
+    o.connect(g).connect(c.destination); o.start(t); o.stop(t + 0.14);
+  }
+  /* 咔嚓：相册切换（两声短嗒模拟快门） */
+  function shutter(){
+    var c = audio(); if(!c) return;
+    [0, 0.07].forEach(function(off){
+      var t = c.currentTime + off, o = c.createOscillator(), g = c.createGain();
+      o.type = 'square'; o.frequency.setValueAtTime(off ? 2200 : 1700, t);
+      env(g, t, 0.18, 0.03);
+      o.connect(g).connect(c.destination); o.start(t); o.stop(t + 0.04);
+    });
+  }
+  /* 噪声塑形通用：bandpass 扫频 */
+  function noiseSweep(f0, f1, peak, dur, q){
+    var c = audio(); if(!c) return;
+    var t = c.currentTime, s = c.createBufferSource(), g = c.createGain(), bp = c.createBiquadFilter();
+    s.buffer = noiseBuf; bp.type = 'bandpass'; bp.Q.value = q || 1.2;
+    bp.frequency.setValueAtTime(f0, t);
+    bp.frequency.exponentialRampToValueAtTime(f1, t + dur);
+    env(g, t, peak, dur);
+    s.connect(bp).connect(g).connect(c.destination); s.start(t); s.stop(t + dur + 0.05);
+  }
+  /* 纸响：信封拆开 */
+  function paper(){ noiseSweep(900, 2600, 0.4, 0.5, 0.9); }
+  /* 嗖：封面下滑 */
+  function whoosh(){ noiseSweep(300, 1800, 0.36, 0.35, 0.8); }
+
+  document.addEventListener('click', function(e){
+    var el;
+    /* 开场片内的点击不发声（视频有自己的声音） */
+    if(e.target.closest && e.target.closest('#intro')) return;
+    /* 狗子已有真狗叫，不叠加 */
+    if(e.target.closest && e.target.closest('#pkDog')) return;
+    if((el = e.target.closest('#card')) && !el.classList.contains('open')){ paper(); return; }
+    if(e.target.closest && e.target.closest('.peek')){ pop(); return; }
+    if(e.target.closest && e.target.closest('#deck')){ shutter(); return; }
+    if(e.target.closest && e.target.closest('#cover')){ whoosh(); return; }
+    if(e.target.closest && (e.target.closest('#musicBtn') || e.target.closest('#reIntro'))){ tick(); return; }
+  }, true);
 })();
 </script>
 </body>
