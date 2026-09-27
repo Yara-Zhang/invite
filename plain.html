@@ -439,11 +439,13 @@ background:url("assets/linen.jpg") center/cover;
   .env .knife img{display:block;width:100%;}
   /* handwritten cue under the envelope: a page footnote, not a label on the object */
   .env-hint{
-    margin-top:18px;text-align:center;font-family:var(--hand);
+    position:absolute;left:50%;top:4.5%;transform:translateX(-50%);
+    z-index:6;text-align:center;font-family:var(--hand);
     font-size:17px;color:#4E3A1E;letter-spacing:.32em;text-indent:.32em;
     animation:env-hint-breathe 2.4s ease-in-out infinite;
-    pointer-events:none;
+    pointer-events:none;white-space:nowrap;
   }
+  .env-hint .hint-arrow{display:block;width:30px;height:54px;margin:1px auto 0;}
   @keyframes env-hint-breathe{
     0%,100%{opacity:.8;}
     50%{opacity:1;}
@@ -1035,6 +1037,7 @@ background:url("assets/linen.jpg") center/cover;
             <line x1="319" y1="218.2" x2="162" y2="146.2" stroke="rgba(255,255,250,.65)" stroke-width="1" data-page-node-id="aPA4QYnsm8x3pMGPfQQfGs"/>
           </svg></div>
           <div class="flap" data-page-node-id="isEOq899y2GhDMGyTBcsjE"></div>
+          <div class="env-hint" aria-hidden="true" data-page-node-id="KQlosejFJvBsOx4MjhnYCG">点我拆信<svg class="hint-arrow" viewBox="0 0 40 56" aria-hidden="true"><path d="M31 4 C34 18 27 34 14 45" stroke="#8A5A28" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M21 40 L12 46.5 L20 49 Z" fill="#8A5A28"/></svg></div>
           <div class="seal" data-page-node-id="2DkagrC1BjKHDKSxMHlqOf">
             <svg width="0" height="0" style="position:absolute" aria-hidden="true" data-page-node-id="g1AF14m8hemSliRj67tqc0">
               <defs data-page-node-id="1QCH3r1D0nGSpAyEbZQoVZ">
@@ -1074,8 +1077,6 @@ background:url("assets/linen.jpg") center/cover;
           </div>
         <div class="knife" aria-hidden="true" data-page-node-id="8Y1f5LAA7KZnAkJIiZ40R1"><img src="assets/poppy.png" alt="" data-page-node-id="Hv5DV60p0s25wK41VdX4cO"></div>
         </div>
-      </div>
-      <div class="env-hint" aria-hidden="true" data-page-node-id="KQlosejFJvBsOx4MjhnYCG">点我拆信</div>
       </div>
       <div class="card-body" data-page-node-id="4aliEFgZQI23IOmQ58cUAO">
       <div class="lh" data-page-node-id="0B3L9cDsqpPQmNqoXqmOuN">亲 朋 亲 启</div>
